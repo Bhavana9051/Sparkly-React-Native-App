@@ -82,7 +82,7 @@ const MovingTextScreen = ({ route, navigation }) => {
                             fontSize,
                             color: theme.textColor,
                         }}
-                        duration={scrollDirection.includes('Right') || scrollDirection.includes('Left') ? 6000 : 10000} // Duration depends on direction
+                        duration={scrollDirection.includes('Right') || scrollDirection.includes('Left') ? 5000 : 10000} // Duration depends on direction
                         loop
                         bounce={false} // Ticker-style scrolling only
                         repeatSpacer={50} // Space between repetitions

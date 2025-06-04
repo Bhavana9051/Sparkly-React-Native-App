@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ImageBackground } from 'react-native'; // Ensure SafeAreaView is imported
-import ColorPicker from 'react-native-wheel-color-picker'; // Correct named import
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ImageBackground } from 'react-native';
+import ColorPicker from 'react-native-wheel-color-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import Screen from '../components/Screen'; // Your reusable screen wrapper
+import Screen from '../components/Screen';
 
 const CustomPaletteScreen = ({ navigation }) => {
     const [textColor, setTextColor] = useState('#ffffff'); // Default text color
@@ -11,7 +11,13 @@ const CustomPaletteScreen = ({ navigation }) => {
 
     const handleSaveCustomTheme = async () => {
         try {
-            const customTheme = { textColor, backgroundColor };
+            // Add the timestamp to the saved theme
+            const customTheme = {
+                textColor,
+                backgroundColor,
+                savedAt: new Date().getTime(), // Save the current timestamp
+            };
+
             // Save the custom theme to AsyncStorage
             await AsyncStorage.setItem('customTheme', JSON.stringify(customTheme));
             alert('Custom theme saved successfully!');

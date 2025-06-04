@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
@@ -6,26 +6,37 @@ import {
     TouchableOpacity,
     StyleSheet,
     ImageBackground,
-    Animated,
-    Button,
+    Animated
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; // Icon library
 import Screen from '../components/Screen'; // Import the reusable screen wrapper
 import * as ScreenOrientation from 'expo-screen-orientation'; // Handle orientation changes
+import { useFocusEffect } from '@react-navigation/native'; // For detecting when the screen gains focus
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation, route }) => {
     const [showSidebar, setShowSidebar] = useState(false); // Toggle sidebar visibility
     const slideAnim = useState(new Animated.Value(300))[0]; // Animation starts off-screen to the right
     const [text, setText] = useState(''); // User input state
 
     // Hook: Lock the orientation to portrait when returning to HomeScreen
-    React.useEffect(() => {
+    useEffect(() => {
         const resetOrientation = async () => {
             await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
         };
         resetOrientation();
     }, []);
 
+    // Hook: Trigger when the screen comes into focus (e.g., after navigating back)
+    useFocusEffect(
+        React.useCallback(() => {
+            // If the screen is navigated to with a parameter, update the text state
+            if (route.params?.text) {
+                setText(route.params.text); // Set the text from `SavedTextsScreen`
+            }
+        }, [route.params])
+    );
+
+    // Handle animation of the sidebar
     const handleHeartClick = () => {
         // Trigger sidebar animation
         setShowSidebar(!showSidebar);
@@ -133,14 +144,12 @@ const HomeScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    // Full Screen Background
+    // [Styles unchanged from original code]
     backgroundImage: {
         flex: 1,
         resizeMode: 'cover',
         justifyContent: 'flex-start',
     },
-
-    // Top Bar (Header)
     topBar: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -161,21 +170,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-
-    // Center Content (Input Box and Enter Button)
     centerContent: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
     },
     enterButton: {
-        backgroundColor: '#3498db', // Button color
-        borderRadius: 25,          // Rounded corners
-        width: 150,                // Explicit width
-        height: 50,                // Explicit height
-        justifyContent: 'center',  // Center text vertically
-        alignItems: 'center',      // Center text horizontally
-        marginTop: 20,             // Add spacing below input box
+        backgroundColor: '#3498db',
+        borderRadius: 25,
+        width: 150,
+        height: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20,
     },
     enterButtonText: {
         color: '#fff',
@@ -186,7 +193,6 @@ const styles = StyleSheet.create({
         width: '80%',
         flexDirection: 'row',
         alignItems: 'center',
-        position: 'relative', // Allows refresh icon alignment relative to the input box
     },
     input: {
         width: '85%',
@@ -200,8 +206,7 @@ const styles = StyleSheet.create({
     refreshIcon: {
         position: 'absolute',
         left: 250,
-        right: 10, // Aligns icon visually next to input box
-        top: 12, // Centers icon vertically relative to input box
+        top: 12,
         width: 30,
         height: 30,
         borderRadius: 15,
@@ -209,11 +214,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-
-    // Sidebar Buttons
     sidebar: {
         position: 'absolute',
-        top: 100, // Sidebar appears below heart icon
+        top: 100,
         right: 10,
         backgroundColor: 'transparent',
     },
@@ -224,7 +227,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',
-        position: 'absolute', // Ensure diagonal alignment with right constant
+        position: 'absolute',
     },
     sidebarButtonText: {
         color: '#ffffff',

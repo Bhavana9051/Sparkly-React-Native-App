@@ -18,27 +18,38 @@ const predefinedThemes = [
 ];
 
 const ThemesScreen = ({ navigation }) => {
-    const [selectedTheme, setSelectedTheme] = useState(predefinedThemes[0]); // Default theme
+    const [selectedTheme, setSelectedTheme] = useState(predefinedThemes[0]); // Default to the first theme
 
     const handleThemeSelect = (theme) => {
-        setSelectedTheme(theme);
+        setSelectedTheme(theme); // Update the current selected theme
     };
 
     const handleSaveTheme = async () => {
-        const themeData = {
-            textColor: selectedTheme.textColor,
-            backgroundColor: selectedTheme.backgroundColor,
-        };
-        await AsyncStorage.setItem('selectedTheme', JSON.stringify(themeData)); // Persist theme
-        navigation.goBack(); // Navigate back to HomeScreen
+        try {
+            // Include a timestamp to track when this theme was saved
+            const themeData = {
+                textColor: selectedTheme.textColor,
+                backgroundColor: selectedTheme.backgroundColor,
+                savedAt: new Date().getTime(), // Save the current time
+            };
+
+            // Save the selected theme to AsyncStorage
+            await AsyncStorage.setItem('selectedTheme', JSON.stringify(themeData));
+
+            alert('Theme saved successfully!');
+            navigation.goBack(); // Navigate back to the calling screen
+        } catch (error) {
+            console.error('Error saving theme:', error);
+            alert('Failed to save theme. Please try again.');
+        }
     };
 
     const handleCustomPalettePress = () => {
-        navigation.navigate('CustomPaletteScreen');
+        navigation.navigate('CustomPaletteScreen'); // Navigate to the custom palette screen
     };
 
     const handleReturnToHome = () => {
-        navigation.navigate('HomeScreen'); // Navigate back to HomeScreen
+        navigation.navigate('HomeScreen'); // Navigate back to the home screen
     };
 
     return (
@@ -54,7 +65,7 @@ const ThemesScreen = ({ navigation }) => {
                     <FlatList
                         data={predefinedThemes}
                         keyExtractor={(item) => item.id}
-                        numColumns={2}
+                        numColumns={2} // Display two themes per row
                         renderItem={({ item }) => (
                             <TouchableOpacity
                                 style={[
@@ -65,10 +76,10 @@ const ThemesScreen = ({ navigation }) => {
                                         borderColor: selectedTheme.id === item.id ? '#000' : 'transparent',
                                     },
                                 ]}
-                                onPress={() => handleThemeSelect(item)}
+                                onPress={() => handleThemeSelect(item)} // Select the theme on press
                             >
                                 <Text style={{ color: item.textColor, fontSize: 22, fontWeight: 'bold' }}>
-                                    {item.letter}
+                                    {item.letter} {/* Display the theme letter */}
                                 </Text>
                             </TouchableOpacity>
                         )}
@@ -95,7 +106,7 @@ const ThemesScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
     backgroundImage: {
         flex: 1,
-        resizeMode: 'none',
+        resizeMode: 'cover',
     },
     container: {
         flex: 1,
@@ -107,6 +118,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 20,
         color: '#4A0072',
+        textAlign: 'center',
     },
     themeBox: {
         margin: 10,
@@ -123,7 +135,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         padding: 15,
         alignSelf: 'center',
-        marginTop: 5,
+        marginTop: 10,
         marginBottom: 30,
     },
     saveButtonText: {

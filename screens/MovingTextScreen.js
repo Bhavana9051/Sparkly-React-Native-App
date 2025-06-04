@@ -5,24 +5,24 @@ import {
     Dimensions,
     StyleSheet,
     Text,
-    Modal,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Slider from '@react-native-community/slider';
 import { Ionicons } from '@expo/vector-icons';
 import Screen from '../components/Screen';
-import TextTicker from 'react-native-text-ticker';
+import { Marquee } from '@animatereactnative/marquee';
+import { CommonActions } from '@react-navigation/native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 
 const MovingTextScreen = ({ route, navigation }) => {
-    const { message } = route.params || { message: "Please provide valid text" };
-    const [screenDimensions, setScreenDimensions] = useState(Dimensions.get('window'));
+    const { message } = route.params || { message: "Please provide valid text" }; // Fallback for message
     const [theme, setTheme] = useState({ textColor: '#fff', backgroundColor: '#000' });
-    const [textSize, setTextSize] = useState(50);
-    const [scrollDirection, setScrollDirection] = useState('RightToLeft'); // Default scroll direction
-    const [isMultiLine, setIsMultiLine] = useState(false);
-    const [showSettings, setShowSettings] = useState(false);
-    const [useTicker, setUseTicker] = useState(false); // Toggle scrolling
+    const [textStyle, setTextStyle] = useState({});
+    const [screenDimensions, setScreenDimensions] = useState(Dimensions.get('window'));
+    const [textSize, setTextSize] = useState(route.params?.textSize || 50);
+    const [scrollSpeed, setScrollSpeed] = useState(route.params?.scrollSpeed || 1);
+    const [scrollDirection, setScrollDirection] = useState(route.params?.scrollDirection || 'RightToLeft');
+    const [useTicker, setUseTicker] = useState(route.params?.useTicker ?? true);
+    const [isMultiLine, setIsMultiLine] = useState(route.params?.isMultiLine || false);
 
     useEffect(() => {
         const unlockOrientation = async () => {
@@ -39,175 +39,188 @@ const MovingTextScreen = ({ route, navigation }) => {
             setScreenDimensions(window);
         });
 
-        fetchTheme();
+        fetchThemeAndStyle(); // Fetch both theme and text style
         return () => {
-            subscription.remove();
+            subscription?.remove();
         };
     }, []);
+
+    const fetchThemeAndStyle = async () => {
+        try {
+            const savedTextStyleRaw = await AsyncStorage.getItem('selectedTextStyle');
+            const savedThemeRaw = await AsyncStorage.getItem('selectedTheme');
+            const customThemeRaw = await AsyncStorage.getItem('customTheme');
+
+            const savedTextStyle = savedTextStyleRaw ? JSON.parse(savedTextStyleRaw) : null;
+            const savedTheme = savedThemeRaw ? JSON.parse(savedThemeRaw) : null;
+            const customTheme = customThemeRaw ? JSON.parse(customThemeRaw) : null;
+
+            let activeTheme;
+
+            if (savedTheme && customTheme) {
+                activeTheme = customTheme.savedAt > savedTheme.savedAt ? customTheme : savedTheme;
+            } else if (customTheme) {
+                activeTheme = customTheme;
+            } else if (savedTheme) {
+                activeTheme = savedTheme;
+            } else {
+                activeTheme = { textColor: '#fff', backgroundColor: '#000' };
+            }
+
+            setTheme({
+                textColor: activeTheme.textColor || '#fff',
+                backgroundColor: activeTheme.backgroundColor || '#000',
+            });
+
+            if (savedTextStyle) {
+                setTextStyle(savedTextStyle); // Update the text style
+            }
+        } catch (error) {
+            console.error('Error fetching theme or text style:', error);
+        }
+    };
+
+    const getMarqueeDirection = () => {
+        if (scrollDirection === 'RightToLeft') {
+            return { direction: 'horizontal', reverse: false };
+        } else if (scrollDirection === 'LeftToRight') {
+            return { direction: 'horizontal', reverse: true };
+        } else if (scrollDirection === 'TopToBottom') {
+            return { direction: 'vertical', reverse: true };
+        } else if (scrollDirection === 'BottomToTop') {
+            return { direction: 'vertical', reverse: false };
+        }
+    };
 
     const getFontSize = () => {
         const baseSize = Math.min(screenDimensions.width, screenDimensions.height);
         return (textSize / 100) * baseSize * 0.8;
     };
 
-    const toggleSettingsModal = () => {
-        setShowSettings(!showSettings);
-    };
-
-    const fetchTheme = async () => {
-        try {
-            const savedTheme = await AsyncStorage.getItem('selectedTheme');
-            const customTheme = await AsyncStorage.getItem('customTheme');
-            const activeTheme = savedTheme ? JSON.parse(savedTheme) : JSON.parse(customTheme);
-
-            if (activeTheme) {
-                setTheme({
-                    textColor: activeTheme.textColor || '#fff',
-                    backgroundColor: activeTheme.backgroundColor || '#000',
-                });
-            }
-        } catch (error) {
-            console.error('Error fetching theme:', error);
-        }
-    };
-
     const renderSingleLineText = () => {
-        const fontSize = getFontSize();
-
-        if (useTicker) {
+        if (!useTicker) {
             return (
                 <View style={styles.singleLineContainer}>
-                    <TextTicker
-                        style={{
-                            fontSize,
-                            color: theme.textColor,
-                        }}
-                        duration={scrollDirection.includes('Right') || scrollDirection.includes('Left') ? 5000 : 10000} // Duration depends on direction
-                        loop
-                        bounce={false} // Ticker-style scrolling only
-                        repeatSpacer={50} // Space between repetitions
-                        marqueeDelay={500} // Delay before the marquee starts scrolling
+                    <Text
+                        style={[
+                            styles.text,
+                            {
+                                fontSize: getFontSize(),
+                                color: theme.textColor,
+                                fontFamily: textStyle?.fontFamily,
+                                fontWeight: textStyle?.fontWeight,
+                                fontStyle: textStyle?.fontStyle,
+                                letterSpacing: textStyle?.letterSpacing,
+                            },
+                        ]}
                     >
                         {message}
-                    </TextTicker>
+                    </Text>
+                </View>
+            );
+        }
+
+        const { direction, reverse } = getMarqueeDirection();
+
+        return (
+            <View style={styles.singleLineContainer}>
+                <Marquee
+                    spacing={20}
+                    speed={scrollSpeed}
+                    direction={direction}
+                    reverse={reverse}
+                    style={{ width: '100%' }}
+                >
+                    <Text
+                        style={[
+                            styles.text,
+                            {
+                                fontSize: getFontSize(),
+                                color: theme.textColor,
+                                fontFamily: textStyle?.fontFamily,
+                                fontWeight: textStyle?.fontWeight,
+                                fontStyle: textStyle?.fontStyle,
+                                letterSpacing: textStyle?.letterSpacing,
+                            },
+                        ]}
+                    >
+                        {message}
+                    </Text>
+                </Marquee>
+            </View>
+        );
+    };
+
+    const renderMultiLineText = () => {
+        if (!message) {
+            return (
+                <View style={styles.errorContainer}>
+                    <Text style={[styles.errorText, { color: theme.textColor }]}>
+                        No message provided to display.
+                    </Text>
                 </View>
             );
         }
 
         return (
-            <View style={styles.singleLineContainer}>
-                <Text style={[styles.text, { fontSize, color: theme.textColor }]}>
-                    {message}
-                </Text>
+            <View style={styles.multiLineContainer}>
+                {message.split(' ').map((word, index) => (
+                    <Text
+                        key={index}
+                        style={[
+                            styles.multiLineText,
+                            {
+                                fontSize: getFontSize(),
+                                color: theme.textColor,
+                                fontFamily: textStyle?.fontFamily,
+                                fontWeight: textStyle?.fontWeight,
+                                fontStyle: textStyle?.fontStyle,
+                                letterSpacing: textStyle?.letterSpacing,
+                            },
+                        ]}
+                    >
+                        {word}
+                    </Text>
+                ))}
             </View>
         );
     };
-
-    const renderMultiLineText = () => (
-        <View style={styles.multiLineContainer}>
-            {message.split(' ').map((word, index) => (
-                <Text key={index} style={[styles.multiLineText, { fontSize: getFontSize(), color: theme.textColor }]}>
-                    {word}
-                </Text>
-            ))}
-        </View>
-    );
 
     return (
         <Screen style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
             {isMultiLine ? renderMultiLineText() : renderSingleLineText()}
 
+            {/* Navigate to Settings Screen */}
             <TouchableOpacity
                 style={[styles.settingsButton, { backgroundColor: theme.textColor }]}
-                onPress={toggleSettingsModal}
+                onPress={() =>
+                    navigation.navigate('Settings', {
+                        textSize,
+                        scrollSpeed,
+                        scrollDirection,
+                        useTicker,
+                        isMultiLine,
+                        theme,
+                        message: message || "Please provide valid text", // Pass message to SettingsScreen
+                    })
+                }
             >
                 <Ionicons name="settings" size={30} color={theme.backgroundColor} />
             </TouchableOpacity>
 
             <TouchableOpacity
                 style={[styles.returnButton, { backgroundColor: theme.textColor }]}
-                onPress={() => navigation.goBack()}
+                onPress={() => {
+                    navigation.dispatch(
+                        CommonActions.reset({
+                            index: 0,
+                            routes: [{ name: 'HomeScreen' }], // Reset the stack to start with HomeScreen
+                        })
+                    );
+                }}
             >
                 <Ionicons name="arrow-back" size={30} color={theme.backgroundColor} />
             </TouchableOpacity>
-
-            <Modal
-                visible={showSettings}
-                animationType="slide"
-                transparent={true}
-                onRequestClose={toggleSettingsModal}
-            >
-                <View style={[styles.modalContainer, { backgroundColor: 'rgba(0,0,0,0.9)' }]}>
-                    <Text style={[styles.modalTitle, { color: theme.textColor }]}>Text Display Settings</Text>
-
-                    <View style={styles.sliderContainer}>
-                        <Text style={[styles.sliderLabel, { color: theme.textColor }]}>Text Size: {textSize}</Text>
-                        <Slider
-                            style={styles.slider}
-                            minimumValue={30}
-                            maximumValue={100}
-                            step={1}
-                            value={textSize}
-                            onValueChange={setTextSize}
-                            minimumTrackTintColor={theme.textColor}
-                            maximumTrackTintColor="#666"
-                            thumbTintColor={theme.textColor}
-                        />
-                    </View>
-
-                    <Text style={[styles.sectionTitle, { color: theme.textColor }]}>Scroll Direction</Text>
-                    <View style={styles.directionOptions}>
-                        {['RightToLeft', 'LeftToRight', 'TopToBottom', 'BottomToTop'].map(direction => (
-                            <TouchableOpacity
-                                key={direction}
-                                style={[
-                                    styles.optionButton,
-                                    scrollDirection === direction && styles.selectedOption,
-                                    { borderColor: theme.textColor },
-                                ]}
-                                onPress={() => setScrollDirection(direction)}
-                                disabled={!useTicker} // Disable direction changes when ticker is off
-                            >
-                                <Text
-                                    style={[
-                                        styles.optionButtonText,
-                                        { color: scrollDirection === direction ? theme.backgroundColor : theme.textColor },
-                                        scrollDirection === direction && { fontWeight: 'bold' },
-                                    ]}
-                                >
-                                    {direction.replace(/([A-Z])/g, ' $1').trim()}
-                                </Text>
-                            </TouchableOpacity>
-                        ))}
-                    </View>
-
-                    <TouchableOpacity
-                        style={[
-                            styles.toggleButton,
-                            useTicker && styles.selectedOption,
-                            { borderColor: theme.textColor },
-                        ]}
-                        onPress={() => setUseTicker(!useTicker)}
-                    >
-                        <Text
-                            style={[
-                                styles.toggleButtonText,
-                                { color: useTicker ? theme.backgroundColor : theme.textColor },
-                                useTicker && { fontWeight: 'bold' },
-                            ]}
-                        >
-                            {useTicker ? 'Scroll (On)' : 'Scroll (Off)'}
-                        </Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={[styles.closeButton, { backgroundColor: theme.textColor }]}
-                        onPress={toggleSettingsModal}
-                    >
-                        <Text style={[styles.closeButtonText, { color: theme.backgroundColor }]}>Apply Settings</Text>
-                    </TouchableOpacity>
-                </View>
-            </Modal>
         </Screen>
     );
 };
@@ -231,13 +244,20 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     text: {
-        fontWeight: 'bold',
         textAlign: 'center',
     },
     multiLineText: {
-        fontWeight: 'bold',
         marginVertical: 5,
         textAlign: 'center',
+    },
+    errorContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    errorText: {
+        fontWeight: 'bold',
+        fontSize: 18,
     },
     settingsButton: {
         position: 'absolute',
@@ -260,71 +280,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         elevation: 5,
-    },
-    modalContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 20,
-    },
-    modalTitle: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 30,
-    },
-    sliderContainer: {
-        width: '100%',
-        marginBottom: 30,
-    },
-    sliderLabel: {
-        fontSize: 16,
-        marginBottom: 10,
-        textAlign: 'center',
-    },
-    sectionTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 15,
-        alignSelf: 'flex-start',
-    },
-    directionOptions: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-        marginBottom: 25,
-    },
-    optionButton: {
-        paddingVertical: 12,
-        paddingHorizontal: 20,
-        margin: 5,
-        borderRadius: 8,
-        borderWidth: 1,
-    },
-    selectedOption: {
-        backgroundColor: '#fff',
-    },
-    optionButtonText: {
-        fontSize: 14,
-    },
-    toggleButton: {
-        paddingVertical: 15,
-        paddingHorizontal: 30,
-        borderRadius: 8,
-        borderWidth: 1,
-        marginBottom: 30,
-    },
-    toggleButtonText: {
-        fontSize: 16,
-        textAlign: 'center',
-    },
-    closeButton: {
-        paddingVertical: 15,
-        paddingHorizontal: 40,
-        borderRadius: 8,
-    },
-    closeButtonText: {
-        fontSize: 18,
-        fontWeight: 'bold',
     },
 });
 

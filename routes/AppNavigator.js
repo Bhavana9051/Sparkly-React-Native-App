@@ -11,6 +11,7 @@ import TextStylesScreen from '../screens/TextStylesScreen';
 import DisplayModesScreen from '../screens/DisplayModesScreen';
 import MovingTextScreen from '../screens/MovingTextScreen';
 import CustomPaletteScreen from '../screens/CustomPaletteScreen';
+import SettingsScreen from '../screens/SettingsScreen';
 
 const Stack = createStackNavigator();
 
@@ -29,6 +30,7 @@ const AppNavigator = () => {
         <Stack.Screen name="TextStylesScreen" component={TextStylesScreen} />
         <Stack.Screen name="DisplayModesScreen" component={DisplayModesScreen} />
         <Stack.Screen name="MovingTextScreen" component={MovingTextScreen} />
+        <Stack.Screen name="Settings" component={SettingsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

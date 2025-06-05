@@ -5,13 +5,14 @@ import {
     StyleSheet,
     FlatList,
     ImageBackground,
-    TouchableOpacity,
-    Modal,
     TextInput,
+    Modal,
     Alert,
+    TouchableOpacity,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as SecureStore from 'expo-secure-store'; // Or AsyncStorage
+import { Swipeable } from 'react-native-gesture-handler'; // Swipe to delete
 
 import Screen from '../components/Screen';
 
@@ -61,14 +62,35 @@ const SavedTextsScreen = ({ navigation }) => {
         );
     };
 
-    const renderSavedText = ({ item, index }) => (
-        <TouchableOpacity
-            style={styles.textItem}
-            onPress={() => handleUseText(item)}
-        >
-            <Text style={styles.textItemText}>{item}</Text>
-        </TouchableOpacity>
-    );
+    const handleDeleteText = (textToDelete) => {
+        const updatedTexts = savedTexts.filter((text) => text !== textToDelete);
+        setSavedTexts(updatedTexts);
+        saveTextsToStorage(updatedTexts); // Save updated list to local storage
+        Alert.alert('Deleted', 'Text successfully deleted.');
+    };
+
+    const renderSavedText = ({ item }) => {
+        const renderRightAction = () => (
+            <TouchableOpacity
+                style={styles.swipeActionButton}
+                onPress={() => handleDeleteText(item)}
+            >
+                <Ionicons name="trash" size={24} color="rgba(29, 181, 232, 0.99)" />
+                <Text style={styles.swipeActionText}>Delete</Text>
+            </TouchableOpacity>
+        );
+
+        return (
+            <Swipeable renderRightActions={renderRightAction}>
+                <TouchableOpacity
+                    style={styles.textItem}
+                    onPress={() => handleUseText(item)}
+                >
+                    <Text style={styles.textItemText}>{item}</Text>
+                </TouchableOpacity>
+            </Swipeable>
+        );
+    };
 
     return (
         <Screen style={styles.container}>
@@ -116,15 +138,17 @@ const SavedTextsScreen = ({ navigation }) => {
                             <View style={styles.modalButtons}>
                                 <TouchableOpacity
                                     onPress={() => setModalVisible(false)} // Close the modal
-                                    style={[styles.modalButton, { backgroundColor: 'white' }]} // White button for cancel
+                                    style={[styles.modalButton, { backgroundColor: 'white' }]}
                                 >
-                                    <Text style={[styles.modalButtonText, { color: 'red' }]}>
+                                    <Text
+                                        style={[styles.modalButtonText, { color: 'red' }]}
+                                    >
                                         Cancel
                                     </Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
                                     onPress={handleAddText}
-                                    style={[styles.modalButton, styles.saveButton]} // Styled for Save
+                                    style={[styles.modalButton, styles.saveButton]}
                                 >
                                     <Text style={styles.modalButtonText}>Save</Text>
                                 </TouchableOpacity>
@@ -132,6 +156,11 @@ const SavedTextsScreen = ({ navigation }) => {
                         </View>
                     </View>
                 </Modal>
+
+                {/* Fancy Back Button at Bottom Left */}
+                <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+                    <Ionicons name="arrow-back" size={24} color="white" />
+                </TouchableOpacity>
             </ImageBackground>
         </Screen>
     );
@@ -177,8 +206,21 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(29, 181, 232, 0.54)',
     },
     textItemText: {
-        backgroundColor: 'rgba(29, 181, 232, 0.06)',
         fontSize: 16,
+        color: 'black',
+    },
+    swipeActionButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 10,
+        backgroundColor: '#ffffff',
+        borderRadius: 5,
+        marginBottom: 10,
+    },
+    swipeActionText: {
+        fontSize: 12,
+        color: 'rgba(29, 181, 232, 0.99)',
+        fontWeight: 'bold',
     },
     modalOverlay: {
         flex: 1,
@@ -209,23 +251,34 @@ const styles = StyleSheet.create({
     },
     modalButtons: {
         flexDirection: 'row',
-        justifyContent: 'space-between', // Spread buttons evenly
+        justifyContent: 'space-between',
         marginTop: 20,
     },
     modalButton: {
         paddingHorizontal: 20,
         paddingVertical: 10,
         borderRadius: 5,
-        backgroundColor: 'white', // Default white background for cancel button
-        borderWidth: 1, // Add border for better visibility
-        borderColor: '#ddd', // Light gray border for cancel button
+        backgroundColor: 'white',
+        borderColor: '#ddd',
+        borderWidth: 1,
     },
     saveButton: {
-        backgroundColor: '#3498db', // Blue background for Save button
+        backgroundColor: '#3498db',
     },
     modalButtonText: {
-        color: '#000', // Ensure contrast for cancel button text
+        color: '#000',
         fontWeight: 'bold',
+    },
+    backButton: {
+        position: 'absolute',
+        bottom: 20,
+        left: 20,
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        backgroundColor: '#3498db',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });
 

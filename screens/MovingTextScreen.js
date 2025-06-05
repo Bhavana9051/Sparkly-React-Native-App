@@ -6,6 +6,9 @@ import {
     StyleSheet,
     Text,
 } from 'react-native';
+import { DISPLAY_MODES, displayModesConfig } from '../constants/displayModes';
+import FloatingEmojis from '../components/FloatingEmojis';
+import LEDBorder from '../components/LEDBorder';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import Screen from '../components/Screen';
@@ -23,6 +26,7 @@ const MovingTextScreen = ({ route, navigation }) => {
     const [scrollDirection, setScrollDirection] = useState(route.params?.scrollDirection || 'RightToLeft');
     const [useTicker, setUseTicker] = useState(route.params?.useTicker ?? true);
     const [isMultiLine, setIsMultiLine] = useState(route.params?.isMultiLine || false);
+    const [displayMode, setDisplayMode] = useState(DISPLAY_MODES.DEFAULT);
 
     useEffect(() => {
         const unlockOrientation = async () => {
@@ -44,6 +48,23 @@ const MovingTextScreen = ({ route, navigation }) => {
             subscription?.remove();
         };
     }, []);
+
+    useEffect(() => {
+        fetchDisplayMode();
+    }, []);
+
+
+    const fetchDisplayMode = async () => {
+        try {
+            const savedMode = await AsyncStorage.getItem('displayMode');
+            if (savedMode) {
+                setDisplayMode(savedMode);
+            }
+        } catch (error) {
+            console.error('Error fetching display mode:', error);
+        }
+    };
+
 
     const fetchThemeAndStyle = async () => {
         try {
@@ -97,6 +118,33 @@ const MovingTextScreen = ({ route, navigation }) => {
         return (textSize / 100) * baseSize * 0.8;
     };
 
+    const renderDisplayEffects = () => {
+        const config = displayModesConfig[displayMode];
+
+        switch (displayMode) {
+            case DISPLAY_MODES.FLOATING_EMOJIS:
+            case DISPLAY_MODES.SNOWFLAKES:
+            case DISPLAY_MODES.SPARKLES:
+                return (
+                    <FloatingEmojis
+                        emojis={config.emojis}
+                        count={30}
+                        size={24}
+                    />
+                );
+
+            case DISPLAY_MODES.LED_BORDER:
+                return <LEDBorder />;
+
+            default:
+                return null;
+        }
+    };
+
+    const getTextEffects = () => {
+        return displayModesConfig[displayMode]?.textEffect || {};
+    };
+
     const renderSingleLineText = () => {
         if (!useTicker) {
             return (
@@ -112,6 +160,7 @@ const MovingTextScreen = ({ route, navigation }) => {
                                 fontStyle: textStyle?.fontStyle,
                                 letterSpacing: textStyle?.letterSpacing,
                             },
+                            getTextEffects()
                         ]}
                     >
                         {message}
@@ -142,6 +191,7 @@ const MovingTextScreen = ({ route, navigation }) => {
                                 fontStyle: textStyle?.fontStyle,
                                 letterSpacing: textStyle?.letterSpacing,
                             },
+                            getTextEffects()
                         ]}
                     >
                         {message}
@@ -155,7 +205,7 @@ const MovingTextScreen = ({ route, navigation }) => {
         if (!message) {
             return (
                 <View style={styles.errorContainer}>
-                    <Text style={[styles.errorText, { color: theme.textColor }]}>
+                    <Text style={[styles.errorText, { color: theme.textColor }, getTextEffects()]}>
                         No message provided to display.
                     </Text>
                 </View>
@@ -177,6 +227,7 @@ const MovingTextScreen = ({ route, navigation }) => {
                                 fontStyle: textStyle?.fontStyle,
                                 letterSpacing: textStyle?.letterSpacing,
                             },
+                            getTextEffects()
                         ]}
                     >
                         {word}
@@ -188,6 +239,7 @@ const MovingTextScreen = ({ route, navigation }) => {
 
     return (
         <Screen style={[styles.container, { backgroundColor: theme.backgroundColor }]}>
+            {renderDisplayEffects()}
             {isMultiLine ? renderMultiLineText() : renderSingleLineText()}
 
             {/* Navigate to Settings Screen */}

@@ -6,19 +6,22 @@ import {
     TouchableOpacity,
     StyleSheet,
     ImageBackground,
-    Animated
+    Animated,
+    BackHandler,
+    Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; // Icon library
 import Screen from '../components/Screen'; // Import the reusable screen wrapper
 import * as ScreenOrientation from 'expo-screen-orientation'; // Handle orientation changes
-import { useFocusEffect } from '@react-navigation/native'; // For detecting when the screen gains focus
+import { useFocusEffect, CommonActions } from '@react-navigation/native'; // For detecting when the screen gains focus
 
 const HomeScreen = ({ navigation, route }) => {
     const [showSidebar, setShowSidebar] = useState(false); // Toggle sidebar visibility
     const slideAnim = useState(new Animated.Value(300))[0]; // Animation starts off-screen to the right
     const [text, setText] = useState(''); // User input state
 
-    // Hook: Lock the orientation to portrait when returning to HomeScreen
+
+    // Hook: Lock the orientation to portrait on screen mount
     useEffect(() => {
         const resetOrientation = async () => {
             await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
@@ -26,13 +29,33 @@ const HomeScreen = ({ navigation, route }) => {
         resetOrientation();
     }, []);
 
-    // Hook: Trigger when the screen comes into focus (e.g., after navigating back)
+    // Hook: Triggered when the screen comes into focus (e.g., after navigating back)
     useFocusEffect(
         React.useCallback(() => {
-            // If the screen is navigated to with a parameter, update the text state
+            // Update the text state if returning with a parameter
             if (route.params?.text) {
                 setText(route.params.text); // Set the text from `SavedTextsScreen`
             }
+
+            // Handle back button behavior
+            const onBackPress = () => {
+                Alert.alert(
+                    'Hold on!',
+                    'Are you sure you want to exit the app?',
+                    [
+                        {
+                            text: 'Cancel',
+                            style: 'cancel',
+                        },
+                        { text: 'Exit', onPress: () => BackHandler.exitApp() },
+                    ]
+                );
+                return true; // Prevent default back button behavior
+            };
+
+            BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
         }, [route.params])
     );
 
@@ -49,6 +72,16 @@ const HomeScreen = ({ navigation, route }) => {
 
     const handleSidebarNavigation = (screenName) => {
         navigation.navigate(screenName);
+    };
+
+    const handleLogout = () => {
+        // Removing all navigation stack and navigating to WelcomeScreen
+        navigation.dispatch(
+            CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'WelcomeScreen' }], // Navigate to WelcomeScreen on logout
+            })
+        );
     };
 
     const handleEnterPress = () => {
@@ -114,18 +147,19 @@ const HomeScreen = ({ navigation, route }) => {
                         { label: 'Saved Texts', screen: 'SavedTextsScreen' },
                         { label: 'Text Styles', screen: 'TextStylesScreen' },
                         { label: 'Display Modes', screen: 'DisplayModesScreen' },
+                        { label: 'Logout', screen: 'WelcomeScreen', action: handleLogout }, // New Logout button
                     ].map((btn, index) => (
                         <TouchableOpacity
                             key={index}
                             style={[
                                 styles.sidebarButton,
                                 {
-                                    width: Math.max(150 - index * 30, 100), // Shrinking width
-                                    top: index * 60, // Progressively increase top position (for diagonal layout)
+                                    width: Math.max(150 - index * 20, 100), // Shrinking width (non-increasing order)
+                                    top: index * 60, // Spaced progressively by 60 units vertically
                                     right: 0, // Keep right edges constant
                                 },
                             ]}
-                            onPress={() => handleSidebarNavigation(btn.screen)}
+                            onPress={btn.action ? btn.action : () => handleSidebarNavigation(btn.screen)}
                         >
                             <Text
                                 style={[
@@ -144,7 +178,6 @@ const HomeScreen = ({ navigation, route }) => {
 };
 
 const styles = StyleSheet.create({
-    // [Styles unchanged from original code]
     backgroundImage: {
         flex: 1,
         resizeMode: 'cover',

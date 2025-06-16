@@ -28,11 +28,6 @@ const LoginScreen = ({ navigation }) => {
         }
     };
 
-    const handleGmailLogin = () => {
-        Alert.alert('Gmail Authentication', 'Mock Gmail login successful!');
-        navigation.replace('HomeScreen'); // Simulate successful Gmail login
-    };
-
     return (
         <Screen>
             {/* Background Image */}
@@ -62,13 +57,6 @@ const LoginScreen = ({ navigation }) => {
 
                     {/* Login Button */}
                     <Button title="Login" onPress={handleLogin} />
-
-                    {/* Gmail Login Button */}
-                    <Button
-                        title="Continue with Gmail"
-                        onPress={handleGmailLogin}
-                        color="#db4437" // Gmail Red Color for Button
-                    />
                 </View>
             </ImageBackground>
         </Screen>

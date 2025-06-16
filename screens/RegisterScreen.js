@@ -24,11 +24,6 @@ const RegisterScreen = ({ navigation }) => {
         }
     };
 
-    const handleGmailLogin = () => {
-        Alert.alert('Gmail Authentication', 'Mock Gmail login successful!');
-        navigation.replace('HomeScreen'); // Simulate successful Gmail login
-    };
-
     return (
         <Screen>
             {/* Background Image */}
@@ -59,13 +54,6 @@ const RegisterScreen = ({ navigation }) => {
 
                     {/* Register Button */}
                     <Button title="Register" onPress={handleRegister} />
-
-                    {/* Gmail Login Button */}
-                    <Button
-                        title="Continue with Gmail"
-                        onPress={handleGmailLogin}
-                        color="#db4437" // Gmail button with red color
-                    />
                 </View>
             </ImageBackground>
         </Screen>

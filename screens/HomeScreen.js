@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     View,
     Text,
@@ -10,18 +10,16 @@ import {
     BackHandler,
     Alert,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // Icon library
-import Screen from '../components/Screen'; // Import the reusable screen wrapper
-import * as ScreenOrientation from 'expo-screen-orientation'; // Handle orientation changes
-import { useFocusEffect, CommonActions } from '@react-navigation/native'; // For detecting when the screen gains focus
+import { Ionicons } from '@expo/vector-icons';
+import Screen from '../components/Screen';
+import * as ScreenOrientation from 'expo-screen-orientation';
+import { useFocusEffect } from '@react-navigation/native';
 
 const HomeScreen = ({ navigation, route }) => {
-    const [showSidebar, setShowSidebar] = useState(false); // Toggle sidebar visibility
-    const slideAnim = useState(new Animated.Value(300))[0]; // Animation starts off-screen to the right
-    const [text, setText] = useState(''); // User input state
+    const [showSidebar, setShowSidebar] = useState(false);
+    const slideAnim = useState(new Animated.Value(300))[0];
+    const [text, setText] = useState('');
 
-
-    // Hook: Lock the orientation to portrait on screen mount
     useEffect(() => {
         const resetOrientation = async () => {
             await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
@@ -29,15 +27,13 @@ const HomeScreen = ({ navigation, route }) => {
         resetOrientation();
     }, []);
 
-    // Hook: Triggered when the screen comes into focus (e.g., after navigating back)
+    // Fixed BackHandler with proper subscription pattern
     useFocusEffect(
-        React.useCallback(() => {
-            // Update the text state if returning with a parameter
+        useCallback(() => {
             if (route.params?.text) {
-                setText(route.params.text); // Set the text from `SavedTextsScreen`
+                setText(route.params.text);
             }
 
-            // Handle back button behavior
             const onBackPress = () => {
                 Alert.alert(
                     'Hold on!',
@@ -50,21 +46,24 @@ const HomeScreen = ({ navigation, route }) => {
                         { text: 'Exit', onPress: () => BackHandler.exitApp() },
                     ]
                 );
-                return true; // Prevent default back button behavior
+                return true;
             };
 
-            BackHandler.addEventListener('hardwareBackPress', onBackPress);
+            // Correct event subscription
+            const backHandler = BackHandler.addEventListener(
+                'hardwareBackPress',
+                onBackPress
+            );
 
-            return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+            // Proper cleanup method
+            return () => backHandler.remove();
         }, [route.params])
     );
 
-    // Handle animation of the sidebar
     const handleHeartClick = () => {
-        // Trigger sidebar animation
         setShowSidebar(!showSidebar);
         Animated.timing(slideAnim, {
-            toValue: showSidebar ? 300 : 0, // Slide in or out
+            toValue: showSidebar ? 300 : 0,
             duration: 500,
             useNativeDriver: true,
         }).start();
@@ -74,14 +73,12 @@ const HomeScreen = ({ navigation, route }) => {
         navigation.navigate(screenName);
     };
 
+    // Smoother logout function
     const handleLogout = () => {
-        // Removing all navigation stack and navigating to WelcomeScreen
-        navigation.dispatch(
-            CommonActions.reset({
-                index: 0,
-                routes: [{ name: 'WelcomeScreen' }], // Navigate to WelcomeScreen on logout
-            })
-        );
+        navigation.reset({
+            index: 0,
+            routes: [{ name: 'WelcomeScreen' }],
+        });
     };
 
     const handleEnterPress = () => {
@@ -93,17 +90,15 @@ const HomeScreen = ({ navigation, route }) => {
     };
 
     const handleClearText = () => {
-        setText(''); // Clear the input text
+        setText('');
     };
 
     return (
         <Screen>
-            {/* Background Image */}
             <ImageBackground
                 source={require('../assets/HomeScreen_pic.jpg')}
                 style={styles.backgroundImage}
             >
-                {/* Top Bar with "Hello Sparkly" and Heart Icon */}
                 <View style={styles.topBar}>
                     <Text style={styles.topBarText}>Hello Sparkly!</Text>
                     <TouchableOpacity onPress={handleHeartClick}>
@@ -113,7 +108,6 @@ const HomeScreen = ({ navigation, route }) => {
                     </TouchableOpacity>
                 </View>
 
-                {/* Center Content: Input Box and Enter Button */}
                 <View style={styles.centerContent}>
                     <View style={styles.inputGroup}>
                         <TextInput
@@ -122,7 +116,6 @@ const HomeScreen = ({ navigation, route }) => {
                             value={text}
                             onChangeText={setText}
                         />
-                        {/* Refresh Icon aligned perfectly with text box */}
                         <TouchableOpacity onPress={handleClearText} style={styles.refreshIcon}>
                             <Ionicons name="refresh" size={24} color="#ffffff" />
                         </TouchableOpacity>
@@ -135,7 +128,6 @@ const HomeScreen = ({ navigation, route }) => {
                     </TouchableOpacity>
                 </View>
 
-                {/* Sidebar Buttons */}
                 <Animated.View
                     style={[
                         styles.sidebar,
@@ -147,16 +139,16 @@ const HomeScreen = ({ navigation, route }) => {
                         { label: 'Saved Texts', screen: 'SavedTextsScreen' },
                         { label: 'Text Styles', screen: 'TextStylesScreen' },
                         { label: 'Display Modes', screen: 'DisplayModesScreen' },
-                        { label: 'Logout', screen: 'WelcomeScreen', action: handleLogout }, // New Logout button
+                        { label: 'Logout', screen: 'WelcomeScreen', action: handleLogout },
                     ].map((btn, index) => (
                         <TouchableOpacity
                             key={index}
                             style={[
                                 styles.sidebarButton,
                                 {
-                                    width: Math.max(150 - index * 20, 100), // Shrinking width (non-increasing order)
-                                    top: index * 60, // Spaced progressively by 60 units vertically
-                                    right: 0, // Keep right edges constant
+                                    width: Math.max(150 - index * 20, 100),
+                                    top: index * 60,
+                                    right: 0,
                                 },
                             ]}
                             onPress={btn.action ? btn.action : () => handleSidebarNavigation(btn.screen)}
@@ -164,7 +156,7 @@ const HomeScreen = ({ navigation, route }) => {
                             <Text
                                 style={[
                                     styles.sidebarButtonText,
-                                    { fontSize: Math.max(15 - index * 2, 10) }, // Shrinking font size
+                                    { fontSize: Math.max(15 - index * 2, 10) },
                                 ]}
                             >
                                 {btn.label}
@@ -177,6 +169,7 @@ const HomeScreen = ({ navigation, route }) => {
     );
 };
 
+// Styles remain unchanged from original
 const styles = StyleSheet.create({
     backgroundImage: {
         flex: 1,

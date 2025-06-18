@@ -9,6 +9,18 @@ A simple message announcement app to let your loved ones know what you're thinki
 
 ---
 
+## Tech Stack Used 🛠️  
+
+Sparkly is built with the following technologies:  
+
+- **React Native**: For building the cross-platform mobile app.  
+- **JavaScript**: Core programming language for development.  
+- **Expo**: To simplify React Native development and configuration.  
+- **Expo Dev Deployment**: Fast testing and deployment using Expo tools.  
+- **Node.js**: Backend integration and managing dependencies.  
+
+---
+
 ## Features 🎉  
 
 Sparkly provides you with interactive features to make messaging fun and personalized:  
@@ -33,79 +45,79 @@ Dive into the magic of Sparkly with this short walkthrough video showcasing all 
 Here’s a visual walkthrough of the app:
 
 ### Welcome Screen  
-![Welcome Screen](https://drive.google.com/uc?id=1ZikZlmlgFPFsgAS8S84yMfGFj3hUL7dk)
+<img src="https://drive.google.com/uc?id=1ZikZlmlgFPFsgAS8S84yMfGFj3hUL7dk" width="500">
 
 ---
 
 ### Registration & Login Screens  
 - **Register Screen**:  
-![Register Screen](https://drive.google.com/uc?id=1ZxmY2Y_BRhRU6SS4hSeH3lxuW0i8vcsP)  
+<img src="https://drive.google.com/uc?id=1ZxmY2Y_BRhRU6SS4hSeH3lxuW0i8vcsP" width="500">  
 
 - **Login Screen**:  
-![Login Screen](https://drive.google.com/uc?id=1ZzEXv1LPxOBs3XKz0VKDFnor7uFwYct_)  
+<img src="https://drive.google.com/uc?id=1ZzEXv1LPxOBs3XKz0VKDFnor7uFwYct_" width="500">  
 
 - **Login Success - Home Screen**:  
-![Login Success](https://drive.google.com/uc?id=1_7DjhBtggeB6XIT2nQd5vF-HkV1Cgk7g)  
+<img src="https://drive.google.com/uc?id=1_7DjhBtggeB6XIT2nQd5vF-HkV1Cgk7g" width="500">  
 
 ---
 
 ### Home Screen & Navigation  
 - **Home Screen**:  
-![Home Screen](https://drive.google.com/uc?id=1_8mFORGITedpcWmoIZLjuzyzN-qPwOWs)  
+<img src="https://drive.google.com/uc?id=1_8mFORGITedpcWmoIZLjuzyzN-qPwOWs" width="500">  
 
 - **Message Added on Home Screen**:  
-![Home Screen - Message Added](https://drive.google.com/uc?id=1_A5sPM_1ZwJLIJCNr2mwnvSw_bbDd6fh)  
+<img src="https://drive.google.com/uc?id=1_A5sPM_1ZwJLIJCNr2mwnvSw_bbDd6fh" width="500">  
 
 - **Saved Texts Navigation from Home Screen**:  
-![Saved Texts Navigation](https://drive.google.com/uc?id=1_kmDU_1AsnV604md0c6QxIX-q-SBMyTA)  
+<img src="https://drive.google.com/uc?id=1_kmDU_1AsnV604md0c6QxIX-q-SBMyTA" width="500">  
 
 ---
 
 ### Saved Texts Screen  
 - **Saved Texts Screen**:  
-![Saved Texts](https://drive.google.com/uc?id=1_XshsHtgQNwZAejatioCQ8a2-AjfD0cx)  
+<img src="https://drive.google.com/uc?id=1_XshsHtgQNwZAejatioCQ8a2-AjfD0cx" width="500">  
 
 - **Adding New Saved Text**:  
-![Adding Saved Text](https://drive.google.com/uc?id=1_ZGHGVxUnP0W-E2cPg7DbDyKsiNFzBzq)  
+<img src="https://drive.google.com/uc?id=1_ZGHGVxUnP0W-E2cPg7DbDyKsiNFzBzq" width="500">  
 
 - **Reusing Saved Text for Message**:  
-![Reusing Saved Text](https://drive.google.com/uc?id=1_cezJ1XUgGHsn74WYbAGS7r5AYyNWZEU)  
+<img src="https://drive.google.com/uc?id=1_cezJ1XUgGHsn74WYbAGS7r5AYyNWZEU" width="500">  
 
 - **Deleting a Saved Text**:  
-![Deleting Saved Text](https://drive.google.com/uc?id=1_c8HqPNcmPX_y_mMzjwztuRgXrvHS3Jv)  
+<img src="https://drive.google.com/uc?id=1_c8HqPNcmPX_y_mMzjwztuRgXrvHS3Jv" width="500">  
 
 ---
 
 ### Moving Text - Main Announcement Screen  
 - **Moving Text Screen**:  
-![Moving Text Screen](https://drive.google.com/uc?id=1ZgX1tGh9RDFP-CrJayjkIsbKVY-hPDXY)  
+<img src="https://drive.google.com/uc?id=1ZgX1tGh9RDFP-CrJayjkIsbKVY-hPDXY" width="500">  
 
 - **Theme Applied with Default Display Mode**:  
-![Theme Applied Screen](https://drive.google.com/uc?id=1_mjy5MxL-6DFxrqiykACFRCScF898UuC)  
+<img src="https://drive.google.com/uc?id=1_mjy5MxL-6DFxrqiykACFRCScF898UuC" width="500">  
 
 - **LED Display Mode**:  
-![LED Display Mode](https://drive.google.com/uc?id=1a5uVBEsB00F0VZptnx8EaYGCeBDGT42l)  
+<img src="https://drive.google.com/uc?id=1a5uVBEsB00F0VZptnx8EaYGCeBDGT42l" width="500">  
 
 - **Scroll Settings Modal Screen**:  
-![Scroll Settings Modal](https://drive.google.com/uc?id=1_nOcFxoVnErAsTTK4zugUTgCeI-VMNNP)  
+<img src="https://drive.google.com/uc?id=1_nOcFxoVnErAsTTK4zugUTgCeI-VMNNP" width="500">  
 
 ---
 
 ### Display Modes  
-![Display Modes Screen](https://drive.google.com/uc?id=1a-FH0agnFjXw3IwGuQG2pIo86oDFJJ3T)  
+<img src="https://drive.google.com/uc?id=1a-FH0agnFjXw3IwGuQG2pIo86oDFJJ3T" width="500">  
 
 ---
 
 ### Text Styles Screen  
-![Text Styles Screen](https://drive.google.com/uc?id=1_yXRs3n3ZN7wYE0FK5ZLtz5hDQYtSw3a)  
+<img src="https://drive.google.com/uc?id=1_yXRs3n3ZN7wYE0FK5ZLtz5hDQYtSw3a" width="500">  
 
 ---
 
 ### Themes Screen  
 - **Themes Screen**:  
-![Themes Screen](https://drive.google.com/uc?id=1_XMg7GF4v5Vb1a_D2ou1gxYn35ZrsVPF)  
+<img src="https://drive.google.com/uc?id=1_XMg7GF4v5Vb1a_D2ou1gxYn35ZrsVPF" width="500">  
 
 - **Custom Theme Options Button**:  
-![Custom Theme Options](https://drive.google.com/uc?id=1_Xl0wwnzwbINbVs7GfCmVA_XwCLFoaar)  
+<img src="https://drive.google.com/uc?id=1_Xl0wwnzwbINbVs7GfCmVA_XwCLFoaar" width="500">  
 
 ---

@@ -45,79 +45,117 @@ Dive into the magic of Sparkly with this short walkthrough video showcasing all 
 Here’s a visual walkthrough of the app:
 
 ### Welcome Screen  
-<img src="https://drive.google.com/uc?id=1ZikZlmlgFPFsgAS8S84yMfGFj3hUL7dk" width="500">
+<div align="center">
+    <img src="https://drive.google.com/uc?id=1ZikZlmlgFPFsgAS8S84yMfGFj3hUL7dk" width="500">
+</div>
 
 ---
 
 ### Registration & Login Screens  
 - **Register Screen**:  
-<img src="https://drive.google.com/uc?id=1ZxmY2Y_BRhRU6SS4hSeH3lxuW0i8vcsP" width="500">  
+<div align="center">
+    <img src="https://drive.google.com/uc?id=1ZxmY2Y_BRhRU6SS4hSeH3lxuW0i8vcsP" width="500">
+</div>  
 
 - **Login Screen**:  
-<img src="https://drive.google.com/uc?id=1ZzEXv1LPxOBs3XKz0VKDFnor7uFwYct_" width="500">  
+<div align="center">
+    <img src="https://drive.google.com/uc?id=1ZzEXv1LPxOBs3XKz0VKDFnor7uFwYct_" width="500">
+</div>  
 
 - **Login Success - Home Screen**:  
-<img src="https://drive.google.com/uc?id=1_7DjhBtggeB6XIT2nQd5vF-HkV1Cgk7g" width="500">  
+<div align="center">
+    <img src="https://drive.google.com/uc?id=1_7DjhBtggeB6XIT2nQd5vF-HkV1Cgk7g" width="500">
+</div>
 
 ---
 
 ### Home Screen & Navigation  
 - **Home Screen**:  
-<img src="https://drive.google.com/uc?id=1_8mFORGITedpcWmoIZLjuzyzN-qPwOWs" width="500">  
+<div align="center">
+    <img src="https://drive.google.com/uc?id=1_8mFORGITedpcWmoIZLjuzyzN-qPwOWs" width="500">
+</div>  
 
 - **Message Added on Home Screen**:  
-<img src="https://drive.google.com/uc?id=1_A5sPM_1ZwJLIJCNr2mwnvSw_bbDd6fh" width="500">  
+<div align="center">
+    <img src="https://drive.google.com/uc?id=1_A5sPM_1ZwJLIJCNr2mwnvSw_bbDd6fh" width="500">
+</div>
 
 - **Saved Texts Navigation from Home Screen**:  
-<img src="https://drive.google.com/uc?id=1_kmDU_1AsnV604md0c6QxIX-q-SBMyTA" width="500">  
+<div align="center">
+    <img src="https://drive.google.com/uc?id=1_kmDU_1AsnV604md0c6QxIX-q-SBMyTA" width="500">
+</div>  
 
 ---
 
 ### Saved Texts Screen  
 - **Saved Texts Screen**:  
-<img src="https://drive.google.com/uc?id=1_XshsHtgQNwZAejatioCQ8a2-AjfD0cx" width="500">  
+<div align="center">
+    <img src="https://drive.google.com/uc?id=1_XshsHtgQNwZAejatioCQ8a2-AjfD0cx" width="500">
+</div>  
 
 - **Adding New Saved Text**:  
-<img src="https://drive.google.com/uc?id=1_ZGHGVxUnP0W-E2cPg7DbDyKsiNFzBzq" width="500">  
+<div align="center">
+    <img src="https://drive.google.com/uc?id=1_ZGHGVxUnP0W-E2cPg7DbDyKsiNFzBzq" width="500">
+</div>  
 
 - **Reusing Saved Text for Message**:  
-<img src="https://drive.google.com/uc?id=1_cezJ1XUgGHsn74WYbAGS7r5AYyNWZEU" width="500">  
+<div align="center">
+    <img src="https://drive.google.com/uc?id=1_cezJ1XUgGHsn74WYbAGS7r5AYyNWZEU" width="500">
+</div>  
 
 - **Deleting a Saved Text**:  
-<img src="https://drive.google.com/uc?id=1_c8HqPNcmPX_y_mMzjwztuRgXrvHS3Jv" width="500">  
+<div align="center">
+    <img src="https://drive.google.com/uc?id=1_c8HqPNcmPX_y_mMzjwztuRgXrvHS3Jv" width="500">
+</div>  
 
 ---
 
 ### Moving Text - Main Announcement Screen  
 - **Moving Text Screen**:  
-<img src="https://drive.google.com/uc?id=1ZgX1tGh9RDFP-CrJayjkIsbKVY-hPDXY" width="500">  
+<div align="center">
+    <img src="https://drive.google.com/uc?id=1ZgX1tGh9RDFP-CrJayjkIsbKVY-hPDXY" width="500">
+</div>  
 
 - **Theme Applied with Default Display Mode**:  
-<img src="https://drive.google.com/uc?id=1_mjy5MxL-6DFxrqiykACFRCScF898UuC" width="500">  
+<div align="center">
+    <img src="https://drive.google.com/uc?id=1_mjy5MxL-6DFxrqiykACFRCScF898UuC" width="500">
+</div>  
 
 - **LED Display Mode**:  
-<img src="https://drive.google.com/uc?id=1a5uVBEsB00F0VZptnx8EaYGCeBDGT42l" width="500">  
+<div align="center">
+    <img src="https://drive.google.com/uc?id=1a5uVBEsB00F0VZptnx8EaYGCeBDGT42l" width="500">
+</div>  
 
 - **Scroll Settings Modal Screen**:  
-<img src="https://drive.google.com/uc?id=1_nOcFxoVnErAsTTK4zugUTgCeI-VMNNP" width="500">  
+<div align="center">
+    <img src="https://drive.google.com/uc?id=1_nOcFxoVnErAsTTK4zugUTgCeI-VMNNP" width="500">
+</div>  
 
 ---
 
 ### Display Modes  
-<img src="https://drive.google.com/uc?id=1a-FH0agnFjXw3IwGuQG2pIo86oDFJJ3T" width="500">  
+<div align="center">
+    <img src="https://drive.google.com/uc?id=1a-FH0agnFjXw3IwGuQG2pIo86oDFJJ3T" width="500">
+</div>
 
 ---
 
 ### Text Styles Screen  
-<img src="https://drive.google.com/uc?id=1_yXRs3n3ZN7wYE0FK5ZLtz5hDQYtSw3a" width="500">  
+<div align="center">
+    <img src="https://drive.google.com/uc?id=1_yXRs3n3ZN7wYE0FK5ZLtz5hDQYtSw3a" width="500">
+</div>  
 
 ---
 
 ### Themes Screen  
 - **Themes Screen**:  
-<img src="https://drive.google.com/uc?id=1_XMg7GF4v5Vb1a_D2ou1gxYn35ZrsVPF" width="500">  
+<div align="center">
+    <img src="https://drive.google.com/uc?id=1_XMg7GF4v5Vb1a_D2ou1gxYn35ZrsVPF" width="500">
+</div>  
 
 - **Custom Theme Options Button**:  
-<img src="https://drive.google.com/uc?id=1_Xl0wwnzwbINbVs7GfCmVA_XwCLFoaar" width="500">  
+<div align="center">
+    <img src="https://drive.google.com/uc?id=1_Xl0wwnzwbINbVs7GfCmVA_XwCLFoaar" width="500">
+</div>  
 
 ---

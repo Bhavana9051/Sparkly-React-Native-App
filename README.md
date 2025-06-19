@@ -75,6 +75,11 @@ Here’s a visual walkthrough of the app:
     <img src="https://drive.google.com/uc?id=1_8mFORGITedpcWmoIZLjuzyzN-qPwOWs" width="500">
 </div>  
 
+- **Home Screen with buttons expanded**:  
+<div align="center">
+    <img src="https://drive.google.com/file/d/1awuYR0rN65BJ5HtHRAJL3WW9RJVjKfm7/view?usp=drive_link" width="500">
+</div>
+
 - **Message Added on Home Screen**:  
 <div align="center">
     <img src="https://drive.google.com/uc?id=1_A5sPM_1ZwJLIJCNr2mwnvSw_bbDd6fh" width="500">
